@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using TweetSharp;
+using TwitterAPI.Dtos;
 using TwitterAPI.Models;
+using TwitterAPI.Repositories.Interfaces;
 using TwitterAPI.Repository;
 using TwitterAPI.Repository.Interfaces;
 
@@ -14,35 +17,42 @@ namespace TwitterAPI.Controllers
     [ApiController]
     public class TwitterController : ControllerBase
     {
-        private readonly ISearchRepository repo;
+        private readonly ISearchRepository _repo;
+        private readonly IMapper _mapper;
+        private readonly ITweetSharpService _service;
 
-        public TwitterController(ISearchRepository repo)
+        public TwitterController(ISearchRepository repo, IMapper mapper, ITweetSharpService service)
         {
-            this.repo = repo;
+            _repo = repo;
+            _mapper = mapper;
+            _service = service;
         }
 
         [HttpGet("{hashtag}", Name =("SearchByHashtag"))]
         public async Task<ActionResult> SearchByHashtag(string hashtag)
         {
-            TwitterService service = repo.GetAuthorizeService();
+            TwitterService service = _repo.GetAuthorizeService();
+            var statusDtos = new List<TwitterStatusDto>();
 
-            var tweets = await service.SearchAsync(new SearchOptions
+            var tweets = await _service.SearchByHashtagAsync(hashtag).ConfigureAwait(false);
+
+            var statuses = tweets.Value.Statuses;
+            
+            foreach(TwitterStatus status in statuses)
             {
-                Q = hashtag, 
-                Count = 1000
-            }).ConfigureAwait(false);
-
-            var items = tweets.Value.Statuses.Where(x => x.IsRetweeted == false).Select(x => x.TextDecoded);
-
+                var dto = _mapper.Map<TwitterStatusDto>(status);
+                statusDtos.Add(dto);
+            }
+            
             var historicalHastag = new HistoricalHashtag()
             {
                 Hashtag = hashtag, 
                 CreatedDateTime = DateTime.Now                
             };
 
-            repo.AddHistoricalHashtag(historicalHastag);
+            _repo.AddHistoricalHashtag(historicalHastag);
 
-            return Ok(items);
+            return Ok(statusDtos);
         }
     }
 }

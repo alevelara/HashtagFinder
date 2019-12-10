@@ -4,7 +4,9 @@ using System;
 using TweetSharp;
 using TwitterAPI.Contexts;
 using TwitterAPI.Models;
+using TwitterAPI.Repositories.Interfaces;
 using TwitterAPI.Repository.Interfaces;
+using TwitterAPI.Services;
 
 namespace TwitterAPI.Repository
 {
@@ -12,36 +14,27 @@ namespace TwitterAPI.Repository
     {
         private readonly IConfiguration _configuration;
         private readonly HistoricalHashtagContext _context;
+        private readonly ITweetSharpService _service;
         private readonly Authorize authorize;
-        public SearchRepository(IConfiguration configuration, HistoricalHashtagContext context)
+
+        public SearchRepository(IConfiguration configuration, HistoricalHashtagContext context, ITweetSharpService service)
         {
             _configuration = configuration;
             _context = context;
+            _service = service;
 
             authorize = new Authorize(_configuration);
         }        
 
         public TwitterService GetAuthorizeService()
         {
-            TwitterService service;
-
             var apiKey = authorize.ApiKey;
             var apiSecretKey = authorize.SecretApiKey;
 
             var accessToken = authorize.Token;
             var accesSecretToken = authorize.SecretToken;
 
-            try
-            {
-                service = new TwitterService(apiKey, apiSecretKey, accessToken, accesSecretToken);                
-            } 
-            catch (Exception e)
-            {
-                Log.Error("Error during authorization: " + e.Message);
-                service = null;
-            }
-
-            return service;
+            return _service.GetAuthorizeService(apiKey, apiSecretKey, accessToken, accesSecretToken);
         }
 
         public void AddHistoricalHashtag(HistoricalHashtag historicalHashtag)
