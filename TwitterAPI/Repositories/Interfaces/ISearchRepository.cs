@@ -9,8 +9,7 @@ using TwitterAPI.Models;
 namespace TwitterAPI.Repository.Interfaces
 {
     public interface ISearchRepository
-    {
-        TwitterService GetAuthorizeService();
+    {        
         public void AddHistoricalHashtag(HistoricalHashtag historicalHashtag);
     }
 }

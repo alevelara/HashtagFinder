@@ -7,8 +7,7 @@ using TweetSharp;
 namespace TwitterAPI.Repositories.Interfaces
 {
     public interface ITweetSharpService
-    {
-        TwitterService GetAuthorizeService();
+    {        
         Task<TwitterAsyncResult<TwitterSearchResult>> SearchByHashtagAsync(string hashtag);
     }
 }

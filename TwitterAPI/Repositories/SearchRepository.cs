@@ -13,20 +13,12 @@ namespace TwitterAPI.Repository
     public class SearchRepository : ISearchRepository
     {
         private readonly IConfiguration _configuration;
-        private readonly HistoricalHashtagContext _context;
-        private readonly ITweetSharpService _service;
+        private readonly HistoricalHashtagContext _context;        
         
-
-        public SearchRepository(HistoricalHashtagContext context, ITweetSharpService service)
+        public SearchRepository(HistoricalHashtagContext context)
         {            
-            _context = context;
-            _service = service;            
-        }        
-
-        public TwitterService GetAuthorizeService()
-        {
-            return _service.GetAuthorizeService();
-        }
+            _context = context;                  
+        }               
 
         public void AddHistoricalHashtag(HistoricalHashtag historicalHashtag)
         {

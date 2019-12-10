@@ -30,8 +30,7 @@ namespace TwitterAPI.Controllers
 
         [HttpGet("{hashtag}", Name =("SearchByHashtag"))]
         public async Task<ActionResult> SearchByHashtag(string hashtag)
-        {
-            _repo.GetAuthorizeService();
+        {            
             var statusDtos = new List<TwitterStatusDto>();
 
             var tweets = await _service.SearchByHashtagAsync(hashtag).ConfigureAwait(false);

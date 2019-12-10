@@ -20,11 +20,23 @@ namespace TwitterAPI.Services
         public TweetSharpService(IConfiguration configuration)
         {
             _configuration = configuration;
-
             authorize = new Authorize(_configuration);
+
+            _service = GetAuthorizeService();
+        }
+       
+        public async Task<TwitterAsyncResult<TwitterSearchResult>> SearchByHashtagAsync(string hashtag)
+        {
+
+            return await _service.SearchAsync(new SearchOptions
+            {
+                Q = hashtag,
+                Count = 1000
+            }).ConfigureAwait(false);
+
         }
 
-        public TwitterService GetAuthorizeService() 
+        private TwitterService GetAuthorizeService()
         {
             var apiKey = authorize.ApiKey;
             var apiSecretKey = authorize.SecretApiKey;
@@ -43,17 +55,6 @@ namespace TwitterAPI.Services
             }
 
             return _service;
-        }
-
-        public async Task<TwitterAsyncResult<TwitterSearchResult>> SearchByHashtagAsync(string hashtag)
-        {
-
-            return await _service.SearchAsync(new SearchOptions
-            {
-                Q = hashtag,
-                Count = 1000
-            }).ConfigureAwait(false);
-
         }
     }
 }
