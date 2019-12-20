@@ -1,0 +1,24 @@
+<div class="searchtable">
+  <table class="table table-striped">
+    <thead>
+      <tr>        
+        <th scope="col">Author</th>
+        <th scope="col">Tweet</th>
+        <th scope="col">Created</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let search of searches">        
+        <td>
+          <div class="Profileimage">
+            <img src="{{search.author.profileImageUrl}}" alt="Avatar" />
+            <p>{{search.author.screenName}}</p>
+          </div>
+
+        </td>
+        <td>{{search.tweet}}</td>
+        <td>{{search.createdDateTime}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
