@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TweetSharp;
+using TwitterAPI.Dtos;
 using TwitterAPI.Models;
 using TwitterAPI.Repositories.Interfaces;
 
@@ -27,10 +28,9 @@ namespace TwitterAPI.Services
        
         public async Task<TwitterAsyncResult<TwitterSearchResult>> SearchByHashtagAsync(string hashtag)
         {
-
             return await _service.SearchAsync(new SearchOptions
             {
-                Q = hashtag,
+                Q = hashtag,                
                 Count = 1000
             }).ConfigureAwait(false);
 

@@ -1,0 +1,30 @@
+<form>
+  <div class="form-row">
+    <div class="col">
+      <input class="form-control mr-sm-2" type="search" placeholder="#Hashtag" [(ngModel)]="filter.hashtag" name="hashtag" (ngModelChange)="changeHashtag($event)">
+    </div>
+  </div>
+  <br />
+  <div class="form-row">
+    <div class="col">
+      <input class="form-control mr-sm-2" type="datetime" placeholder="FromDate" [(ngModel)]="fromDate" name="fromDate" (ngModelChange)="changeFromDate($event)" />
+    </div>
+    <div class="col">
+      <input class="form-control mr-sm-2" type="datetime" placeholder="ToDate" [(ngModel)]="toDate" name="toDate" (ngModelChange)="changetoDate($event)" />
+    </div>
+  </div>
+  <br />
+  <button type="submit" class="btn btn-primary" (click)="searchByFilter()">Search</button>
+
+  <div *ngIf="isAlreadySearched">
+    <br />    
+    <div class="form-row">
+      <div class="col">
+        <button type="reset" class="btn btn-danger form-control mr-sm-2" (click)="clearData($event)">Clean</button>
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-success form-control mr-sm-2" (click)="exportToExcel($event)">Export to Excel</button>
+      </div>
+    </div>
+  </div>
+</form>

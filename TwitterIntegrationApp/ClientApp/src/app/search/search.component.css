@@ -1,11 +1,12 @@
 .searchtable {
   width: 100%;
   height: 100%;
+  float: right;
 }
 
-.Profileimage {
-  text-align: center;
-}
+  .Profileimage {
+    text-align: center;
+  }
 
   .Profileimage p {
     vertical-align: bottom;
@@ -17,4 +18,8 @@
     text-align: center;
     border-radius: 50%;
     vertical-align: central;
+  }
+
+  .filters {
+    float: left
   }

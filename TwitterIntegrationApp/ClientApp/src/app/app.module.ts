@@ -9,6 +9,7 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { SearchComponent } from './search/search.component';
 import { HistoryComponent } from './history/history.component';
+import { SearchFilterComponent } from './search/search.filter/search.filter.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { HistoryComponent } from './history/history.component';
     NavMenuComponent,
     HomeComponent,
     SearchComponent,
-    HistoryComponent
+    HistoryComponent,
+    SearchFilterComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

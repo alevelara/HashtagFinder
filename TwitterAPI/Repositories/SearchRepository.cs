@@ -11,8 +11,7 @@ using TwitterAPI.Services;
 namespace TwitterAPI.Repository
 {
     public class SearchRepository : ISearchRepository
-    {
-        private readonly IConfiguration _configuration;
+    {        
         private readonly HistoricalHashtagContext _context;        
         
         public SearchRepository(HistoricalHashtagContext context)

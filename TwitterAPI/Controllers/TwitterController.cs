@@ -28,16 +28,16 @@ namespace TwitterAPI.Controllers
             _service = service;
         }
 
-        [HttpGet("{hashtag}", Name =("SearchByHashtag"))]
-        public async Task<ActionResult> SearchByHashtag(string hashtag)
+        [HttpPost("search")]
+        public async Task<ActionResult> SearchByHashtag(FiltersDto filter)
         {            
             var statusDtos = new List<TwitterStatusDto>();
 
-            var tweets = await _service.SearchByHashtagAsync(hashtag).ConfigureAwait(false);
+            var tweets = await _service.SearchByHashtagAsync(filter.Hashtag).ConfigureAwait(false);
 
-            var statuses = tweets.Value.Statuses;
+            var statuses = FilterStatuses(tweets.Value.Statuses, filter);
             
-            foreach(TwitterStatus status in statuses)
+            foreach (TwitterStatus status in statuses)
             {
                 var dto = _mapper.Map<TwitterStatusDto>(status);
                 statusDtos.Add(dto);
@@ -45,13 +45,40 @@ namespace TwitterAPI.Controllers
             
             var historicalHastag = new HistoricalHashtag()
             {
-                Hashtag = hashtag, 
+                Hashtag = filter.Hashtag, 
                 CreatedDateTime = DateTime.Now                
             };
 
             _repo.AddHistoricalHashtag(historicalHastag);
 
             return Ok(statusDtos);
+        }
+
+        private IEnumerable<TwitterStatus> FilterStatuses(IEnumerable<TwitterStatus> statusWitoutFilter, FiltersDto filter)
+        {
+            IEnumerable<TwitterStatus> filteredStatus = new List<TwitterStatus>();
+            DateTime? toDateTime = !String.IsNullOrEmpty(filter.ToDate) ? DateTime.Parse(filter.ToDate, System.Globalization.CultureInfo.InvariantCulture) : DateTime.Now;
+            DateTime? fromDateTime = !String.IsNullOrEmpty(filter.FromDate) ? DateTime.Parse(filter.FromDate, System.Globalization.CultureInfo.InvariantCulture) : DateTime.MinValue;
+
+            if (!toDateTime.HasValue && !fromDateTime.HasValue)
+            {
+                filteredStatus = statusWitoutFilter;
+            }
+            else if (fromDateTime.HasValue && !toDateTime.HasValue)
+            {
+                filteredStatus = statusWitoutFilter.Where(x => x.CreatedDate >= fromDateTime.Value).ToList();
+            }
+            else if (toDateTime.HasValue && !fromDateTime.HasValue)
+            {
+                filteredStatus = statusWitoutFilter.Where(x => x.CreatedDate <= toDateTime.Value).ToList();
+            }
+            else if (fromDateTime.HasValue && toDateTime.HasValue)
+            {
+                filteredStatus = statusWitoutFilter.Where(x => x.CreatedDate >= fromDateTime.Value && x.CreatedDate <= toDateTime.Value).ToList();
+            }
+
+            return filteredStatus;
+
         }
     }
 }

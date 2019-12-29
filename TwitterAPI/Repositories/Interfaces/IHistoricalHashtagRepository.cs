@@ -10,6 +10,5 @@ namespace TwitterAPI.Repositories.Interfaces
     public interface IHistoricalHashtagRepository
     {              
         public Task<List<HistoricalHashtag>> GetAsyncHistoricalHashtags();
-
     }
 }
