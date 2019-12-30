@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { HashtagsService } from '../_services/hashtags.service';
+import { faHashtag } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-nav-menu',
@@ -9,8 +9,7 @@ import { HashtagsService } from '../_services/hashtags.service';
 
 export class NavMenuComponent { 
     isExpanded = false;
-
-    constructor(private hashtagService: HashtagsService) { }
+    faHashtag = faHashtag;    
 
     collapse() {
       this.isExpanded = false;

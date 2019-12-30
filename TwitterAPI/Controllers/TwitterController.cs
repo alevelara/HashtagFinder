@@ -8,7 +8,6 @@ using TweetSharp;
 using TwitterAPI.Dtos;
 using TwitterAPI.Models;
 using TwitterAPI.Repositories.Interfaces;
-using TwitterAPI.Repository;
 using TwitterAPI.Repository.Interfaces;
 
 namespace TwitterAPI.Controllers
@@ -51,7 +50,7 @@ namespace TwitterAPI.Controllers
 
             _repo.AddHistoricalHashtag(historicalHastag);
 
-            return Ok(statusDtos);
+            return Ok(statuses);
         }
 
         private IEnumerable<TwitterStatus> FilterStatuses(IEnumerable<TwitterStatus> statusWitoutFilter, FiltersDto filter)

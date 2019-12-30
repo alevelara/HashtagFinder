@@ -2,27 +2,42 @@
   <div class="filters col-md-4">
     <app-searchfilter class="child" (dataEmitter)="manageData($event)"></app-searchfilter>
   </div>
-  <div class="searchtable col-md-8">
-    <table class="table table-striped" id="excel-table">
-      <thead>
-        <tr>
-          <th scope="col">Author</th>
-          <th scope="col">Tweet</th>
-          <th scope="col">Created</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let search of searches">
-          <td>
-            <div class="Profileimage">
-              <img src="{{search.author.profileImageUrl}}" alt="Avatar" />
-              <p>{{search.author.screenName}}</p>
-            </div>
-          </td>
-          <td>{{search.tweet}}</td>
-          <td>{{search.createdDateTime | date: 'dd/MM/yyyy'}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
- </div>
+
+  <ng-container *ngIf="searches.length > 0;then table;else empty">
+
+  </ng-container>
+
+  <ng-template #table>
+    <div class="searchtable col-md-8">
+      <table class="table table-striped" id="excel-table">
+        <thead>
+          <tr>
+            <th scope="col">Author</th>
+            <th scope="col">Tweet</th>
+            <th scope="col">Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let search of searches">
+            <td>
+              <div class="Profileimage">
+                <img src="{{search.author.profileImageUrl}}" alt="Avatar" />
+                <p>{{search.author.screenName}}</p>
+              </div>
+            </td>
+            <td>{{search.tweet}}</td>
+            <td>{{search.createdDateTime | date: 'dd/MM/yyyy'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-template>
+
+  <ng-template #empty>
+    <div class="empty col-md-8">
+      <fa-icon [icon]="faEyeSlash"></fa-icon>
+      <p>What are you looking for?</p>
+    </div>
+  </ng-template>
+</div>
+

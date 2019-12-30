@@ -1,8 +1,16 @@
-.btn {
-  width: 100%
-}
 
-form{
-  padding: 0;
-  margin-top: 5%;
-}
+  form {
+    padding: 0;
+    margin-top: 5%;
+  }
+
+  form .form-row {
+    margin-top: 3%;
+    padding: 0;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+

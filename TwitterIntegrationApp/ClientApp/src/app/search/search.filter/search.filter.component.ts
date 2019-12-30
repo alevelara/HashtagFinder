@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { HashtagsService } from '../../_services/hashtags.service';
 import { Filter } from '../../_models/filter';
+import { faFileExcel, faTrashAlt, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-searchfilter',
@@ -8,15 +8,15 @@ import { Filter } from '../../_models/filter';
   styleUrls: ['./search.filter.component.css']
 })
 
-export class SearchFilterComponent implements OnInit {
+export class SearchFilterComponent {
     @Output() dataEmitter = new EventEmitter<any>();    
     searches: any;   
     filter: Filter = {hashtag: ''};
     isAlreadySearched: boolean;
+    faFileExcel = faFileExcel;
+    faTrashAlt = faTrashAlt;
+    faSearch = faSearch;
 
-  ngOnInit() {
-
-  }
     changeHashtag($event) {
         if ($event != null) {
             this.filter.hashtag = $event;

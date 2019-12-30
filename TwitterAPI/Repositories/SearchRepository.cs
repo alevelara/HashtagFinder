@@ -1,12 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
-using NLog.Fluent;
+﻿using NLog.Fluent;
 using System;
-using TweetSharp;
 using TwitterAPI.Contexts;
 using TwitterAPI.Models;
-using TwitterAPI.Repositories.Interfaces;
 using TwitterAPI.Repository.Interfaces;
-using TwitterAPI.Services;
 
 namespace TwitterAPI.Repository
 {

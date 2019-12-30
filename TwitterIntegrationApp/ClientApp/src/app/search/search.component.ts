@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Filter } from '../_models/filter';
 import { HashtagsService } from '../_services/hashtags.service';
 import * as XLSX from 'xlsx';
+import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-search',
@@ -10,8 +11,9 @@ import * as XLSX from 'xlsx';
 })
 
 export class SearchComponent {    
-    searches: any;
+    searches: any = [];
     filter: Filter;
+    faEyeSlash = faEyeSlash;
 
     constructor(private hashtagService: HashtagsService) { }
 
