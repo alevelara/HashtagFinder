@@ -1,11 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using NLog.Fluent;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using TweetSharp;
-using TwitterAPI.Dtos;
 using TwitterAPI.Models;
 using TwitterAPI.Repositories.Interfaces;
 
@@ -31,7 +28,7 @@ namespace TwitterAPI.Services
             return await _service.SearchAsync(new SearchOptions
             {
                 Q = hashtag,                
-                Count = 1000
+                Count = 1000000
             }).ConfigureAwait(false);
 
         }

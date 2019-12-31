@@ -21,7 +21,6 @@ namespace TwitterAPI.Controllers
         }
 
         [HttpGet]
-
         public async Task<ActionResult> GetHistorical()
         {
             var historical =  await _repo.GetAsyncHistoricalHashtags().ConfigureAwait(false);

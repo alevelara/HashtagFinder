@@ -44,13 +44,15 @@ namespace TwitterAPI.Controllers
             
             var historicalHastag = new HistoricalHashtag()
             {
-                Hashtag = filter.Hashtag, 
+                Hashtag = filter.Hashtag,
+                FromDateTime = !String.IsNullOrEmpty(filter.ToDate) ? DateTime.Parse(filter.ToDate, System.Globalization.CultureInfo.InvariantCulture) : DateTime.Now,
+                ToDateTime = !String.IsNullOrEmpty(filter.FromDate) ? DateTime.Parse(filter.FromDate, System.Globalization.CultureInfo.InvariantCulture) : DateTime.MinValue,
                 CreatedDateTime = DateTime.Now                
             };
 
             _repo.AddHistoricalHashtag(historicalHastag);
 
-            return Ok(statuses);
+            return Ok(statusDtos);
         }
 
         private IEnumerable<TwitterStatus> FilterStatuses(IEnumerable<TwitterStatus> statusWitoutFilter, FiltersDto filter)
@@ -59,19 +61,19 @@ namespace TwitterAPI.Controllers
             DateTime? toDateTime = !String.IsNullOrEmpty(filter.ToDate) ? DateTime.Parse(filter.ToDate, System.Globalization.CultureInfo.InvariantCulture) : DateTime.Now;
             DateTime? fromDateTime = !String.IsNullOrEmpty(filter.FromDate) ? DateTime.Parse(filter.FromDate, System.Globalization.CultureInfo.InvariantCulture) : DateTime.MinValue;
 
-            if (!toDateTime.HasValue && !fromDateTime.HasValue)
+            if (String.IsNullOrEmpty(filter.ToDate) && String.IsNullOrEmpty(filter.FromDate))
             {
                 filteredStatus = statusWitoutFilter;
             }
-            else if (fromDateTime.HasValue && !toDateTime.HasValue)
+            else if (!String.IsNullOrEmpty(filter.FromDate) && String.IsNullOrEmpty(filter.ToDate))
             {
                 filteredStatus = statusWitoutFilter.Where(x => x.CreatedDate >= fromDateTime.Value).ToList();
             }
-            else if (toDateTime.HasValue && !fromDateTime.HasValue)
+            else if (!String.IsNullOrEmpty(filter.ToDate) && String.IsNullOrEmpty(filter.FromDate))
             {
                 filteredStatus = statusWitoutFilter.Where(x => x.CreatedDate <= toDateTime.Value).ToList();
             }
-            else if (fromDateTime.HasValue && toDateTime.HasValue)
+            else if (String.IsNullOrEmpty(filter.ToDate) && String.IsNullOrEmpty(filter.FromDate))
             {
                 filteredStatus = statusWitoutFilter.Where(x => x.CreatedDate >= fromDateTime.Value && x.CreatedDate <= toDateTime.Value).ToList();
             }

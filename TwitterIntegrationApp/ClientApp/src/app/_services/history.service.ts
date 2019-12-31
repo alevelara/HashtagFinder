@@ -10,7 +10,7 @@ export class HistoryService {
 
     constructor(private http: HttpClient) { }
 
-    searchTweetsByHashtag() {
-        return this.http.get(this.baseUrl + 'HashtagHistory)');
+    getHistorySearches() {
+        return this.http.get(this.baseUrl + 'HashtagHistory');
     }
 }

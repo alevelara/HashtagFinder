@@ -1,1 +1,20 @@
-<p>history works!</p>
+<div class="searchtable col-md-8">
+  <table class="table table-striped" id="excel-table">
+    <thead>
+      <tr>
+        <th scope="col">Hashtag</th>
+        <th scope="col">From</th>
+        <th scope="col">To</th>
+        <th scope="col">Created</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let search of history">
+        <td>{{search.hashtag}}</td>
+        <td>{{search.fromDateTime | date: 'dd/MM/yyyy'}}</td>
+        <td>{{search.toDateTime | date: 'dd/MM/yyyy'}}</td>
+        <td>{{search.createdDateTime | date: 'dd/MM/yyyy'}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
