@@ -41,6 +41,8 @@ namespace TwitterAPI
             services.AddScoped<ISearchRepository, SearchRepository>();
             services.AddScoped<IHistoricalHashtagRepository, HistoricalHashtagRepository>();
             services.AddScoped<ITweetSharpService, TweetSharpService>();
+            services.AddScoped<ITweetInviService, TweetInviService>();
+            services.AddScoped<IUrlCutterService, UrlCutterService>();
 
             var mappingConfig = new MapperConfiguration(mc =>
             {

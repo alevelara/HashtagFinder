@@ -1,8 +1,11 @@
-import { ITweeter } from "./ITweeter";
+import { UserInvi } from "./userInvi";
 
 export interface TwitterStatus {
-    Author: ITweeter;       
+    Author: UserInvi;       
     Tweet: string;
     IsRetweeted: boolean;
     CreatedDateTime: Date;
+    RetweetCount: number;
+    FavCount: number;
+    commentCount: number;
 }

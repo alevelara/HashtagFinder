@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Tweetinvi.Models;
 using TweetSharp;
 using TwitterAPI.Dtos;
 using TwitterAPI.Models;
@@ -18,27 +19,32 @@ namespace TwitterAPI.Controllers
     {
         private readonly ISearchRepository _repo;
         private readonly IMapper _mapper;
-        private readonly ITweetSharpService _service;
+        private readonly ITweetInviService _service;
+        private readonly ITweetSharpService _serviceAsync;
+        private readonly IUrlCutterService _urlCutter;
 
-        public TwitterController(ISearchRepository repo, IMapper mapper, ITweetSharpService service)
+        public TwitterController (ISearchRepository repo, IMapper mapper, ITweetInviService service, ITweetSharpService serviceAsync, IUrlCutterService urlCutter)
         {
             _repo = repo;
             _mapper = mapper;
             _service = service;
+            _serviceAsync = serviceAsync;
+            _urlCutter = urlCutter;
         }
-
-        [HttpPost("search")]
-        public async Task<ActionResult> SearchByHashtag(FiltersDto filter)
+    
+        [HttpPost("searchAsync")]
+        public async Task<ActionResult> SearchByHashtagAsync(FiltersDto filter)
         {            
-            var statusDtos = new List<TwitterStatusDto>();
+            var statusDtos = new List<TweetStatusDto>();
 
-            var tweets = await _service.SearchByHashtagAsync(filter.Hashtag).ConfigureAwait(false);
+
+            var tweets = await _serviceAsync.SearchByHashtagAsync(filter.Hashtag).ConfigureAwait(false);
 
             var statuses = FilterStatuses(tweets.Value.Statuses, filter);
             
             foreach (TwitterStatus status in statuses)
             {
-                var dto = _mapper.Map<TwitterStatusDto>(status);
+                var dto = _mapper.Map<TweetStatusDto>(status);
                 statusDtos.Add(dto);
             }
             
@@ -54,6 +60,36 @@ namespace TwitterAPI.Controllers
 
             return Ok(statusDtos);
         }
+
+        [HttpPost("search")]
+        public ActionResult SearchByHashtag(FiltersDto filter)
+        {
+            var tweetInviDtos = new List<TweetInviDTO>();            
+
+            var searches = _service.SearchByHashtag(filter.Hashtag);
+
+            var tweets = FilterStatuses(searches, filter);
+
+            foreach (ITweet tweet in tweets)
+             {
+                var dto = _mapper.Map<TweetInviDTO>(tweet);
+                dto.TweetUrl = _urlCutter.ShortenIt(tweet.Url);
+                tweetInviDtos.Add(dto);
+             }
+
+            var historicalHastag = new HistoricalHashtag()
+            {
+                Hashtag = filter.Hashtag,
+                FromDateTime = !String.IsNullOrEmpty(filter.ToDate) ? DateTime.Parse(filter.ToDate, System.Globalization.CultureInfo.InvariantCulture) : DateTime.Now,
+                ToDateTime = !String.IsNullOrEmpty(filter.FromDate) ? DateTime.Parse(filter.FromDate, System.Globalization.CultureInfo.InvariantCulture) : DateTime.MinValue,
+                CreatedDateTime = DateTime.Now
+            };
+
+            _repo.AddHistoricalHashtag(historicalHastag);
+
+            return Ok(tweetInviDtos);
+        }
+
 
         private IEnumerable<TwitterStatus> FilterStatuses(IEnumerable<TwitterStatus> statusWitoutFilter, FiltersDto filter)
         {
@@ -81,5 +117,32 @@ namespace TwitterAPI.Controllers
             return filteredStatus;
 
         }
+
+        private IEnumerable<ITweet> FilterStatuses(IEnumerable<ITweet> tweetsWithoutFilter, FiltersDto filter)
+        {
+            IEnumerable<ITweet> filteredStatus = new List<ITweet>();
+            DateTime? toDateTime = !String.IsNullOrEmpty(filter.ToDate) ? DateTime.Parse(filter.ToDate, System.Globalization.CultureInfo.InvariantCulture) : DateTime.Now;
+            DateTime? fromDateTime = !String.IsNullOrEmpty(filter.FromDate) ? DateTime.Parse(filter.FromDate, System.Globalization.CultureInfo.InvariantCulture) : DateTime.MinValue;
+
+            if (String.IsNullOrEmpty(filter.ToDate) && String.IsNullOrEmpty(filter.FromDate))
+            {
+                filteredStatus = tweetsWithoutFilter;
+            }
+            else if (!String.IsNullOrEmpty(filter.FromDate) && String.IsNullOrEmpty(filter.ToDate))
+            {
+                filteredStatus = tweetsWithoutFilter.Where(x => x.CreatedAt >= fromDateTime.Value).ToList();
+            }
+            else if (!String.IsNullOrEmpty(filter.ToDate) && String.IsNullOrEmpty(filter.FromDate))
+            {
+                filteredStatus = tweetsWithoutFilter.Where(x => x.CreatedAt <= toDateTime.Value).ToList();
+            }
+            else if (String.IsNullOrEmpty(filter.ToDate) && String.IsNullOrEmpty(filter.FromDate))
+            {
+                filteredStatus = tweetsWithoutFilter.Where(x => x.CreatedAt >= fromDateTime.Value && x.CreatedAt <= toDateTime.Value).ToList();
+            }
+
+            return filteredStatus;
+        }
+
     }
 }

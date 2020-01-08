@@ -14,6 +14,10 @@
           <tr>
             <th scope="col">Author</th>
             <th scope="col">Tweet</th>
+            <th scope="col">Url</th>
+            <th scope="col">Retweets</th>
+            <th scope="col">Comments</th>
+            <th scope="col">Favs</th>
             <th scope="col">Created</th>
           </tr>
         </thead>
@@ -26,6 +30,10 @@
               </div>
             </td>
             <td>{{search.tweet}}</td>
+            <td><a href="{{search.tweetUrl}}">{{search.tweetUrl}}</a></td>
+            <td>{{search.retweetedCount}}</td>
+            <td>{{search.commentsCount}}</td>
+            <td>{{search.favCount}}</td>
             <td>{{search.createdDateTime | date: 'dd/MM/yyyy'}}</td>
           </tr>
         </tbody>

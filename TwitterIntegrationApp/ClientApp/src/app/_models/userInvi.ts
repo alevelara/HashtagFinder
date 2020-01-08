@@ -1,4 +1,4 @@
-export interface ITweeter {
+export interface UserInvi {
   ScreenName: string;
   ProfileImageUrl: string;
 }
