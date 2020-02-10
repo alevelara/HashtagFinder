@@ -9,6 +9,7 @@ using Tweetinvi.Models;
 using Microsoft.Extensions.Configuration;
 using TwitterAPI.Models;
 using NLog.Fluent;
+using Tweetinvi.Parameters;
 
 namespace TwitterAPI.Services
 {
@@ -26,7 +27,12 @@ namespace TwitterAPI.Services
 
         public IEnumerable<ITweet> SearchByHashtag(string hashtag)
         {
-            return Search.SearchTweets(hashtag).Where(x => x.RetweetedTweet == null);
+            return Search.SearchTweets(hashtag);
+        }
+
+        public IEnumerable<ITweet> SearchByParameters(ISearchTweetsParameters parameters)
+        {
+            return Search.SearchTweets(parameters);
         }
 
         public IEnumerable<ITweet> SearchReplyTo(ITweet tweet)

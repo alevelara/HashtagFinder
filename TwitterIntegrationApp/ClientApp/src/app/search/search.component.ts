@@ -44,16 +44,16 @@ export class SearchComponent {
         this.searches = [];
     }
 
-    exportExcel() {
-        /* table id is passed over here */
-        let element = document.getElementById('excel-table');
-        const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+    exportExcel() {                
+      const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.searches);          
+      const wb: XLSX.WorkBook =
+      {
+        Sheets: { 'data': ws },
+        SheetNames: ['data']  
+      };
+      //const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
 
-        /* generate workbook and add the worksheet */
-        const wb: XLSX.WorkBook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-        /* save to file */
-        XLSX.writeFile(wb, 'sheetTest.xlsx');
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+      XLSX.writeFile(wb, 'sheetTest.xlsx');
     }
 }

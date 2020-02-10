@@ -5,8 +5,10 @@ namespace TwitterAPI.Dtos
 {
     public class TweetInviDTO : TweetDTO
     {
-        public UserInviDTO Author { get; set; }
+        public string Author { get; set; }
         
+        public string ProfileImageUrl { get; set; }
+
         public string TweetUrl { get; set; }
 
         public int RetweetedCount { get; set; }

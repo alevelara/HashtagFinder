@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Tweetinvi.Models;
+using Tweetinvi.Parameters;
 
 namespace TwitterAPI.Repositories.Interfaces
 {
@@ -10,5 +11,7 @@ namespace TwitterAPI.Repositories.Interfaces
     {
         IEnumerable<ITweet> SearchByHashtag(string hashtag);
         IEnumerable<ITweet> SearchReplyTo(ITweet tweet);
+        IEnumerable<ITweet> SearchByParameters(ISearchTweetsParameters parameters);
+
     }
 }

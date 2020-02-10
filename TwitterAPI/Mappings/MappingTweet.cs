@@ -28,27 +28,20 @@ namespace TwitterAPI.Mappings
                .ForMember(dest => dest.CreatedDateTime,
                            opts => opts.MapFrom(src => src.CreatedAt))               
                .Include<ITweet, TweetInviDTO>();
-
-            CreateMap<IUser, UserInviDTO>()
-                .ForMember(dest => dest.ScreenName,
-                            opts => opts.MapFrom(src => src.Name))
-                .ForMember(dest => dest.ProfileImageUrl,
-                            opts => opts.MapFrom(src => src.ProfileImageUrl));
-
+         
             CreateMap<ITweet, TweetInviDTO>()
-                .ForMember(dest => dest.Author, (opts => opts.MapFrom(src => new UserInviDTO
-                {
-                    ProfileImageUrl = src.CreatedBy.ProfileImageUrl,
-                    ScreenName = src.CreatedBy.ScreenName
-                })))
+                .ForMember(dest => dest.Author, opts => 
+                    opts.MapFrom(src => src.CreatedBy.Name))
+                .ForMember(dest => dest.ProfileImageUrl, 
+                    opts => opts.MapFrom(src => src.CreatedBy.ProfileImageUrl))
                 .ForMember(dest => dest.CommentsCount,
-                           opts => opts.MapFrom(src => src.QuoteCount))
+                    opts => opts.MapFrom(src => src.QuoteCount))
                .ForMember(dest => dest.RetweetedCount,
-                           opts => opts.MapFrom(src => src.RetweetCount))
+                    opts => opts.MapFrom(src => src.RetweetCount))
                .ForMember(dest => dest.FavCount,
-                           opts => opts.MapFrom(src => src.FavoriteCount))
+                    opts => opts.MapFrom(src => src.FavoriteCount))
                .ForMember(dest => dest.TweetUrl,
-                           opts => opts.MapFrom(src => src.Url));            
+                    opts => opts.MapFrom(src => src.Url));            
 
         }
     }

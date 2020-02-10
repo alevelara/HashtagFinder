@@ -3,9 +3,10 @@ using Google.Apis.Urlshortener.v1;
 using Google.Apis.Urlshortener.v1.Data;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
+using System.Net;
+using System.Text;
+using System.Text.RegularExpressions;
 using TwitterAPI.Repositories.Interfaces;
 
 namespace TwitterAPI.Services
@@ -21,23 +22,19 @@ namespace TwitterAPI.Services
 
         public string ShortenIt(string url)
         {
-            var service = GetUrlShortenerService();
+            HttpWebRequest objRequest = (HttpWebRequest)WebRequest.Create("http://tinyurl.com/api-create.php?url=" + url);
+            string strResponse = null;
 
-            var dataUrl = new Url();
-            dataUrl.LongUrl = url;
-
-            return service.Url.Insert(dataUrl).Execute().Id;
-        }
-
-        private UrlshortenerService GetUrlShortenerService()
-        {
-            UrlshortenerService service = new UrlshortenerService(new BaseClientService.Initializer()
+            try
             {
-                ApiKey = _configuration.GetValue<string>("UrlCutterApiKey"),
-                ApplicationName = "UrlCutter ApiKey"
-            });
+                HttpWebResponse objResponse = objRequest.GetResponse() as HttpWebResponse;
+                StreamReader stmReader = new StreamReader(objResponse.GetResponseStream());
 
-            return service;
+                strResponse = stmReader.ReadToEnd();
+            }
+            catch { strResponse = url; }
+            return strResponse;
         }
+      
     }
 }

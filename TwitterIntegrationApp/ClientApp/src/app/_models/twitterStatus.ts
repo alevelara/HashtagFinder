@@ -1,7 +1,6 @@
-import { UserInvi } from "./userInvi";
-
 export interface TwitterStatus {
-    Author: UserInvi;       
+    Author: string;
+    ProfileImageUrl: string;      
     Tweet: string;
     IsRetweeted: boolean;
     CreatedDateTime: Date;

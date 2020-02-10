@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Tweetinvi.Models;
+using Tweetinvi.Parameters;
 using TweetSharp;
 using TwitterAPI.Dtos;
 using TwitterAPI.Models;
@@ -37,7 +38,6 @@ namespace TwitterAPI.Controllers
         {            
             var statusDtos = new List<TweetStatusDto>();
 
-
             var tweets = await _serviceAsync.SearchByHashtagAsync(filter.Hashtag).ConfigureAwait(false);
 
             var statuses = FilterStatuses(tweets.Value.Statuses, filter);
@@ -64,9 +64,10 @@ namespace TwitterAPI.Controllers
         [HttpPost("search")]
         public ActionResult SearchByHashtag(FiltersDto filter)
         {
-            var tweetInviDtos = new List<TweetInviDTO>();            
+            var tweetInviDtos = new List<TweetInviDTO>();
+            var parameters = CreateParameters(filter);
 
-            var searches = _service.SearchByHashtag(filter.Hashtag);
+            var searches = _service.SearchByParameters(parameters);
 
             var tweets = FilterStatuses(searches, filter);
 
@@ -90,7 +91,7 @@ namespace TwitterAPI.Controllers
             return Ok(tweetInviDtos);
         }
 
-
+        #region Private Methods
         private IEnumerable<TwitterStatus> FilterStatuses(IEnumerable<TwitterStatus> statusWitoutFilter, FiltersDto filter)
         {
             IEnumerable<TwitterStatus> filteredStatus = new List<TwitterStatus>();
@@ -136,7 +137,7 @@ namespace TwitterAPI.Controllers
             {
                 filteredStatus = tweetsWithoutFilter.Where(x => x.CreatedAt <= toDateTime.Value).ToList();
             }
-            else if (String.IsNullOrEmpty(filter.ToDate) && String.IsNullOrEmpty(filter.FromDate))
+            else if (!String.IsNullOrEmpty(filter.ToDate) && !String.IsNullOrEmpty(filter.FromDate))
             {
                 filteredStatus = tweetsWithoutFilter.Where(x => x.CreatedAt >= fromDateTime.Value && x.CreatedAt <= toDateTime.Value).ToList();
             }
@@ -144,5 +145,17 @@ namespace TwitterAPI.Controllers
             return filteredStatus;
         }
 
+        private ISearchTweetsParameters CreateParameters(FiltersDto filters)
+        {
+            SearchTweetsParameters searchParameters = new SearchTweetsParameters(filters.Hashtag)
+            {
+                MaximumNumberOfResults = 1000,
+                Filters = TweetSearchFilters.Hashtags
+            };
+
+            return searchParameters;
+        }
+        
+        #endregion
     }
 }

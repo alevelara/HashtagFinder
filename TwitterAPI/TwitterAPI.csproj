@@ -1,9 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
+﻿<Project Sdk="Microsoft.NET.Sdk.Web" ToolsVersion="Current">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Google.Apis" Version="1.43.0" />
     <PackageReference Include="Google.Apis.Urlshortener.v1" Version="1.41.1.138" />
@@ -23,5 +26,4 @@
     <PackageReference Include="TweetMoaSharp" Version="6.0.0" />
     <PackageReference Include="AutoMapper" Version="9.0.0" />
   </ItemGroup>
-
 </Project>
